@@ -13,12 +13,20 @@ if (!fs.existsSync(paths.files.pricelist)) {
 	throw new Error('Missing pricelist - Please put your pricelist file in the config folder');
 }
 
+let port = '3000';
+if (fs.existsSync(paths.files.config)) {
+	const config = fs.readJSONSync(paths.files.config);
+	
+	if (config.port) {
+		port = config.port;
+	}
+}
 
 Schema.init()
 	.then(() => {
-		app.listen(3000, function() {
-			console.log('listening on port 3000');
-			require('open')('http://localhost:3000/');
+		app.listen(+port, function() {
+			console.log('listening on port ' + port);
+			require('open')('http://localhost:' + port + '/');
 		});
 	})
 	.catch((err) => {
